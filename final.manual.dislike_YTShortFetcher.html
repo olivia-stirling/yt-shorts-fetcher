@@ -590,11 +590,11 @@ function renderTable() {
       ? '<span class="err-badge">error</span>'
       : '<span class="num">' + fmtNum(r.likes) + '</span>';
 
-    var dislikesCell = r.error
-      ? '<span class="err-badge">error</span>'
-      : '<input type="number" class="dislike-input" data-index="' + i +
-        '" value="' + (r.dislikes ?? '') +
-        '" style="width:70px;font-size:13px;">';
+	var dislikesCell = r.error
+	  ? '<span class="err-badge">error</span>'
+	  : '<input type="number" class="dislike-input" data-index="' + results.indexOf(r) +
+	    '" value="' + (r.dislikes ?? '') +
+	    '" style="width:70px;font-size:13px;">';
 
     var ratioCell =
       '<span class="ratio-pill ' + r.ratioCls + '">' + r.ratioLabel + '</span>';
@@ -625,7 +625,7 @@ function renderTable() {
 
 document.addEventListener("input", function(e) {
   if (e.target.classList.contains("dislike-input")) {
-    const index = e.target.dataset.index;
+    const index = parseInt(e.target.dataset.index);
     const newVal = parseInt(e.target.value);
 
     results[index].dislikes = isNaN(newVal) ? null : newVal;
@@ -637,10 +637,11 @@ document.addEventListener("input", function(e) {
     r.ratioLabel = ri.label;
     r.ratioCls = ri.cls;
 
-    renderTable();
+    // Do NOT re-render the table here — prevents jumping
     updateStats();
   }
 });
+
 
 function sortBy(col) {
   if (sortCol === col) sortDir *= -1;
